@@ -46,6 +46,7 @@ public class PackageTests extends TestCase
         suite.addTestSuite(TestAutoTypes.class);
         suite.addTestSuite(EncodingTest.class);
         suite.addTestSuite(TestDefaultTM.class);
+        suite.addTestSuite(TestXss.class);
         return suite;
     }
 }
