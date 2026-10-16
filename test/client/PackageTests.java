@@ -17,6 +17,7 @@ public class PackageTests
 
         suite.addTest(TestCall.suite());
         suite.addTest(TestAsyncCall.suite());
+        suite.addTest(TestServiceFactory.suite());
         return suite;
     }
 }
