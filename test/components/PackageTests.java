@@ -16,6 +16,7 @@ public class PackageTests
         TestSuite suite = new TestSuite("All axis Components tests");
 
         suite.addTest(TestUUID.suite());
+        suite.addTest(TestJSSESocketFactory.suite());
         return suite;
     }
 }
