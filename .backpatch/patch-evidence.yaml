@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 1.4.1-backpatch-00001
+release: 1.4.1-backpatch-00002
 baseline: v1.4+backpatch.baseline
 fixes:
   - cve: CVE-2023-40743
@@ -10,12 +10,20 @@ fixes:
     basis: backport
     artifacts:
       - org.apache.axis:axis
-    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00001 (backpatch-axis@9a837c7).
+    note: Carried from 1.4.1-backpatch-00001.
+  - cve: CVE-2018-8032
+    upstream_fix_url: https://github.com/apache/axis-axis1-java/commit/2e0a5d6fe66b82ab5b89c8029247dc15e6e17d46
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2018-8032
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-axis/commit/46d8b38
+    basis: backport
+    artifacts:
+      - org.apache.axis:axis
+    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00002 (backpatch-axis@46d8b38).
 tests:
-  commit: 9a837c72b8d27404b9db95293416da8d351642ce
+  commit: 46d8b387811740d12601688e2db6cebaa69938db
   command: "JAVA_HOME=<jdk-7> /bin/bash <alliance>/work/wave2/items/scripts/axis-1.4.sh suite <m2> "
   runtime: Azul Zulu (Java 1.7.0_352), Apache Ant 1.6.5, macOS x86_64 under Rosetta 2
-  report: axis-1.4.1-backpatch-00001-tests.zip
-  report_sha256: d9d8982fc707482e52b765d33c8e193e0f89e76ad2153a8b21dde8552e4e3f2e
+  report: axis-1.4.1-backpatch-00002-tests.zip
+  report_sha256: 57ef43c0442a983127b321a1f2d468af6141bc7d56d20d01d5085e9a2484314f
   result: pass
-  note: "the full suite at the tested commit, 721 tests run, 36 failed, each failing at the baseline v1.4+backpatch.baseline too (the same suite there: 718 run, 37 failed), 0 skipped; the regression tests for CVE-2023-40743 are PackageTests, TestServiceFactory"
+  note: "run at 3c2cb8386ad9, whose tree equals this commit's apart from .backpatch/patch-evidence.yaml; the full suite at the tested commit, 722 tests run, 37 failed, each failing at the baseline v1.4+backpatch.baseline too (the same suite there: 718 run, 37 failed), 0 skipped; the regression tests for CVE-2018-8032 are PackageTests, TestXss"
