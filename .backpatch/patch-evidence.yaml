@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 1.4.1-backpatch-00002
+release: 1.4.1-backpatch-00003
 baseline: v1.4+backpatch.baseline
 fixes:
   - cve: CVE-2023-40743
@@ -18,12 +18,28 @@ fixes:
     basis: backport
     artifacts:
       - org.apache.axis:axis
-    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00002 (backpatch-axis@46d8b38).
+    note: Carried from 1.4.1-backpatch-00002.
+  - cve: CVE-2012-5784
+    upstream_fix_url: https://github.com/apache/axis-axis1-java/commit/af9c7ce8a5b0136b0f31d5571d69173f41bc4b7f
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2012-5784
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-axis/commit/843886d
+    basis: backport
+    artifacts:
+      - org.apache.axis:axis
+    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00003 (backpatch-axis@843886d).
+  - cve: CVE-2014-3596
+    upstream_fix_url: https://github.com/apache/axis-axis1-java/commit/af9c7ce8a5b0136b0f31d5571d69173f41bc4b7f
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2014-3596
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-axis/commit/843886d
+    basis: backport
+    artifacts:
+      - org.apache.axis:axis
+    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00003 (backpatch-axis@843886d).
 tests:
-  commit: 46d8b387811740d12601688e2db6cebaa69938db
-  command: "JAVA_HOME=<jdk-7> /bin/bash <alliance>/work/wave2/items/scripts/axis-1.4.sh suite <m2> "
-  runtime: Azul Zulu (Java 1.7.0_352), Apache Ant 1.6.5, macOS x86_64 under Rosetta 2
-  report: axis-1.4.1-backpatch-00002-tests.zip
-  report_sha256: 57ef43c0442a983127b321a1f2d468af6141bc7d56d20d01d5085e9a2484314f
+  commit: 843886d7af850c7ee1392583552cb29fe5e87b94
+  command: "JAVA_HOME=<jdk-7> /bin/bash <alliance>/work/wave2/batch-4/green-suites/scripts/axis-1.4.sh suite <m2> "
+  runtime: "Azul Zulu (Java 1.7.0_352), Apache Ant 1.6.5, macOS x86_64 under Rosetta 2"
+  report: axis-1.4.1-backpatch-00003-tests.zip
+  report_sha256: f681ee8996ac3ae9f0818638acbc6231b4ff7908b9192b36821e2261ffaf7e5b
   result: pass
-  note: "run at 3c2cb8386ad9, whose tree equals this commit's apart from .backpatch/patch-evidence.yaml; the full suite at the tested commit, 722 tests run, 37 failed, each failing at the baseline v1.4+backpatch.baseline too (the same suite there: 718 run, 37 failed), 0 skipped; the regression tests for CVE-2018-8032 are PackageTests, TestXss"
+  note: "the full suite at the tested commit, 727 tests run, 0 failed, 0 skipped; Axis's own SAAJ 1.2 API (build/lib/saaj.jar) is first on the boot class path, as on the JDKs Axis 1.4 was released for, which had no javax.xml.soap; JUnit 3 runs test methods in the JVM's reflection order, which differs between runs on Java 7; test.servicedesc.TestServiceDesc#testFaultSynch and test.utils.TestXMLUtils#testSAXXXE1 depend on that order, failed at the baseline in some runs, and passed in this run; the regression tests for CVE-2012-5784 are PackageTests, TestJSSESocketFactory; the regression tests for CVE-2014-3596 are PackageTests, TestJSSESocketFactory"
