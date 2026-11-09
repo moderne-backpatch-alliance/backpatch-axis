@@ -1,0 +1,21 @@
+schema: osera-patch-evidence/0.1.0
+producer: moderne
+release: 1.4.1-backpatch-00001
+baseline: v1.4+backpatch.baseline
+fixes:
+  - cve: CVE-2023-40743
+    upstream_fix_url: https://github.com/apache/axis-axis1-java/commit/685c309febc64aa393b2d64a05f90e7eb9f73e06
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2023-40743
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-axis/commit/9a837c7
+    basis: backport
+    artifacts:
+      - org.apache.axis:axis
+    note: New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00001 (backpatch-axis@9a837c7).
+tests:
+  commit: 9a837c72b8d27404b9db95293416da8d351642ce
+  command: "JAVA_HOME=<jdk-7> /bin/bash <alliance>/work/wave2/batch-4/green-suites/scripts/axis-1.4.sh suite <m2> "
+  runtime: "Azul Zulu (Java 1.7.0_352), Apache Ant 1.6.5, macOS x86_64 under Rosetta 2"
+  report: axis-1.4.1-backpatch-00001-tests.zip
+  report_sha256: febb73c38a12b26e0d381a2471ffa1173e1a5ba13227fd0c3e37fa70287add85
+  result: pass
+  note: "the full suite at the tested commit, 721 tests run, 0 failed, 0 skipped; Axis's own SAAJ 1.2 API (build/lib/saaj.jar) is first on the boot class path, as on the JDKs Axis 1.4 was released for, which had no javax.xml.soap; JUnit 3 runs test methods in the JVM's reflection order, which differs between runs on Java 7; test.servicedesc.TestServiceDesc#testFaultSynch and test.utils.TestXMLUtils#testSAXXXE1 depend on that order, failed at the baseline in some runs, and passed in this run; the regression tests for CVE-2023-40743 are PackageTests, TestServiceFactory"
