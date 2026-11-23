@@ -50,7 +50,7 @@ public class TestServiceDesc extends TestCase {
         OperationDesc operation;
         List faults;
 
-        operation = (OperationDesc)operations.get(0);
+        operation = desc.getOperationByName("doIt1");
         assertEquals("doIt1", operation.getName());
 
         faults = operation.getFaults();
@@ -59,7 +59,7 @@ public class TestServiceDesc extends TestCase {
         assertEquals("invalid number of registered faults", 
                      2, faults.size());
 
-        operation = (OperationDesc)operations.get(1);
+        operation = desc.getOperationByName("doIt2");
         assertEquals("doIt2", operation.getName());
 
         faults = operation.getFaults();
