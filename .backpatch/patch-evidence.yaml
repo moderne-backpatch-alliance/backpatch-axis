@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 1.4.1-backpatch-00004
+release: 1.4.1-backpatch-00005
 baseline: v1.4+backpatch.baseline
 fixes:
   - cve: CVE-2023-40743
@@ -35,10 +35,19 @@ fixes:
     artifacts:
       - org.apache.axis:axis
     note: Carried from 1.4.1-backpatch-00003; ported onto 1.4; fixed at 1.4.1-backpatch-00003 (backpatch-axis@843886d).
+  - cve: CVE-2026-90436
+    upstream_fix_url: https://github.com/apache/axis-axis1-java/commit/41f3b4e8d04e310ca81f86b92630ab2c11d608bd
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-90436
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-axis/commit/50443f2
+    basis: adapted
+    artifacts:
+      - org.apache.axis:axis
+    note: "New in this release; ported onto 1.4; fixed at 1.4.1-backpatch-00005 (backpatch-axis@50443f2). One line beyond upstream's fix: ClassUtils.loadClass's 1.4-only registered-classloader branch passes the init flag."
 tests:
-  commit: eb5271efb41bf16ba1a706973e17494c0a553d2d
-  command: none in this repository
-  runtime: none, no build or test ran for this release
-  report: carried, see the evidence of the release named in the note
+  commit: 50443f268b565a69496c8a741eb9e05977e7a5f8
+  command: JAVA_HOME=<jdk-7> /bin/bash <alliance>/work/internal/2026-11-19/release/bin-java/axis-1.4.sh suite <m2>
+  runtime: Azul Zulu (Java 1.7.0_352), Apache Ant 1.6.5, macOS x86_64 under Rosetta 2
+  report: axis-1.4.1-backpatch-00005-tests.zip
+  report_sha256: 2e6ae4413ebcf5475fbe4641ee370108a37dafcc5071f8230a5e26c0237713fb
   result: pass
-  note: "this release is a tooling update, it carries no new fix, nothing ran here; its test provenance is tooling-2026-11-03-axis-1.4: a tooling update of moderne-backpatch-alliance/backpatch-axis at v1.4.1-backpatch-00003, whose .backpatch/patch-evidence.yaml says what ran"
+  note: "729 tests at the patch commit, 0 of them skipped by the suite, 0 failed, 0 errors. Axis's own SAAJ 1.2 API (build/lib/saaj.jar) is first on the boot class path, as on the JDKs Axis 1.4 was released for, which had no javax.xml.soap. JUnit 3 runs test methods in the JVM's reflection order, which differs between runs on Java 7; test.servicedesc.TestServiceDesc#testFaultSynch and test.utils.TestXMLUtils#testSAXXXE1 depend on that order, failed at the baseline in some runs (this batch's first baseline run included), and passed in this run. One line beyond upstream's fix: ClassUtils.loadClass's 1.4-only registered-classloader branch passes the init flag."
