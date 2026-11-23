@@ -97,7 +97,23 @@ public final class ClassUtils {
      */
     public static Class forName(String className)
             throws ClassNotFoundException {
-        return loadClass(className);
+        return loadClass(className, true);
+    }
+
+    /**
+     * Use this method instead of Class.forName when the class should be
+     * located but not necessarily initialized. Passing <code>false</code>
+     * avoids running the named class's static initializer, which is
+     * important when the class name comes from untrusted input.
+     *
+     * @param className Class name
+     * @param initialize whether to initialize the class
+     * @return java class
+     * @throws ClassNotFoundException if the class is not found
+     */
+    public static Class forName(String className, boolean initialize)
+            throws ClassNotFoundException {
+        return loadClass(className, initialize);
     }
 
     /**
@@ -117,14 +133,15 @@ public final class ClassUtils {
         // Create final vars for doPrivileged block
         final String className = _className;
         final ClassLoader loader = _loader;
+        final boolean initialize = init;
         try {
             // Get the class within a doPrivleged block
-            Object ret = 
+            Object ret =
                 AccessController.doPrivileged(
                     new PrivilegedAction() {
                         public Object run() {
                             try {
-                                return Class.forName(className, true, loader);
+                                return Class.forName(className, initialize, loader);
                             } catch (Throwable e) {
                                 return e;
                             }
@@ -139,7 +156,7 @@ public final class ClassUtils {
                 throw new ClassNotFoundException(_className);
             }
         } catch (ClassNotFoundException cnfe) {
-            return loadClass(className);
+            return loadClass(className, init);
         }
     }
 
@@ -148,16 +165,18 @@ public final class ClassUtils {
      * getDefaultClassLoader().forName
      *
      * @param _className Class name
+     * @param initialize whether to initialize the class
      * @return java class
      * @throws ClassNotFoundException if the class is not found
      */
-    private static Class loadClass(String _className)
+    private static Class loadClass(String _className, boolean initialize)
             throws ClassNotFoundException {
         // Create final vars for doPrivileged block
         final String className = _className;
+        final boolean init = initialize;
 
         // Get the class within a doPrivleged block
-        Object ret = 
+        Object ret =
             AccessController.doPrivileged(
                     new PrivilegedAction() {
                         public Object run() {
@@ -165,7 +184,7 @@ public final class ClassUtils {
                                 // Check if the class is a registered class then
                                 // use the classloader for that class.
                                 ClassLoader classLoader = getClassLoader(className);
-                                return Class.forName(className, true, classLoader);
+                                return Class.forName(className, init, classLoader);
                             } catch (ClassNotFoundException cnfe) {
                             } catch (SecurityException cnfe) {
                             }
@@ -174,13 +193,13 @@ public final class ClassUtils {
                                 // Try the context class loader
                                 ClassLoader classLoader =
                                     Thread.currentThread().getContextClassLoader();
-                                return Class.forName(className, true, classLoader);
+                                return Class.forName(className, init, classLoader);
                             } catch (ClassNotFoundException cnfe2) {
                                 try {
                                     // Try the classloader that loaded this class.
                                     ClassLoader classLoader =
                                         ClassUtils.class.getClassLoader();
-                                    return Class.forName(className, true, classLoader);
+                                    return Class.forName(className, init, classLoader);
                                 } catch (ClassNotFoundException cnfe3) {
                                     // Try the default class loader.
                                     try {
